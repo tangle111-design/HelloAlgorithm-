@@ -1,3 +1,47 @@
+
+class ListNode:
+    """链表节点类"""
+    def __init__(self, val: int):
+        self.val: int = val               # 节点值
+        self.next: ListNode | None = None # 指向下一节点的引用
+
+def insert(n0: ListNode, P: ListNode):
+    """在链表的节点 n0 之后插入节点 P"""
+    # 要求：
+    # 1) 将节点 P 插入到 n0 后面（即 n0 -> P -> 原来的下一个节点）。
+    # 2) 需要正确处理指针顺序，避免链表断开。
+    # 3) 时间复杂度应为 O(1)。
+    pass
+
+
+def remove(n0: ListNode):
+    """删除链表的节点 n0 之后的首个节点"""
+    # 要求：
+    # 1) 删除 n0 的下一个节点。
+    # 2) 若 n0 后面没有节点，直接返回。
+    # 3) 删除后仍保持链表正确连接。
+    # 4) 时间复杂度应为 O(1)。
+    pass
+
+def access(head: ListNode, index: int) -> ListNode | None:
+    """访问链表中索引为 index 的节点"""
+    # 要求：
+    # 1) 从头节点开始向后遍历，返回第 index 个节点（0-based）。
+    # 2) 若 index 越界（链表长度不足），返回 None。
+    # 3) 注意处理 index = 0 的情况。
+    pass
+
+def find(head: ListNode, target: int) -> int:
+    """在链表中查找值为 target 的首个节点"""
+    # 要求：
+    # 1) 从头节点开始遍历链表。
+    # 2) 找到值等于 target 的第一个节点时，返回其索引（0-based）。
+    # 3) 若不存在目标值，返回 -1。
+    pass
+
+'''答案'''
+
+
 class ListNode:
     """链表节点类"""
     def __init__(self, val: int):
