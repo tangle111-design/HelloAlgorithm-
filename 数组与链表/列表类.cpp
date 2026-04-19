@@ -24,13 +24,13 @@ class MyList {
     /* 获取列表长度（当前元素数量）*/
     int size() {
         // 要求：返回当前有效元素数量。
-        return 0;
+        return arrSize;
     }
 
     /* 获取列表容量 */
     int capacity() {
         // 要求：返回底层数组容量。
-        return 0;
+        return arrCapacity;
     }
 
     /* 访问元素 */
@@ -38,7 +38,10 @@ class MyList {
         // 要求：
         // 1) 检查索引是否越界，越界时抛出 out_of_range。
         // 2) 返回 index 位置的元素。
-        return 0;
+        if(index < 0 || index >= arrSize){
+            throw out_of_range("数组越界");
+        }
+        return arr[index];
     }
 
     /* 更新元素 */
@@ -46,6 +49,10 @@ class MyList {
         // 要求：
         // 1) 检查索引是否越界，越界时抛出 out_of_range。
         // 2) 将 index 位置更新为 num。
+        if (index < 0 || index >= arrSize){
+            throw out_of_range("数组越界");
+        }
+        arr[index] = num;
     }
 
     /* 在尾部添加元素 */
@@ -54,6 +61,12 @@ class MyList {
         // 1) 若容量不足，先扩容。
         // 2) 在尾部插入 num。
         // 3) 更新元素数量。
+        if (arrSize == arrCapacity){
+            extendCapacity();
+        }
+        /*arr[arrSize + 1] = num;*/
+        arr[arrSize] = num;
+        arrSize++;
     }
 
     /* 在中间插入元素 */
@@ -63,6 +76,19 @@ class MyList {
         // 2) 必要时先扩容。
         // 3) 将 index 及其后元素整体后移一位。
         // 4) 在 index 处写入 num 并更新元素数量。
+        if (index < 0 || index >= arrSize){
+            throw out_of_range("数组越界");
+        }
+        if(arrSize == arrCapacity){
+            extendCapacity();
+        }
+        
+        // for(int i = arrSize-2; i<index; i--){
+        for(int i = arrSize-1; i >= index; i--){
+            arr[i+1] = arr[i];
+        }
+        arr[index] = num;
+        arrSize++;
     }
 
     /* 删除元素 */
@@ -72,7 +98,16 @@ class MyList {
         // 2) 记录并返回被删除元素。
         // 3) 将 index 后元素整体前移。
         // 4) 更新元素数量。
-        return 0;
+        if (index < 0 || index >= arrSize){
+            throw out_of_range("数组越界");
+        }
+        int to_delete = arr[index];
+        for(int i = index; i<arrSize-1; i++){
+            // arr[i-1] = arr[i];
+            arr[i] = arr[i + 1];
+        }
+        arrSize--;
+        return to_delete;
     }
 
     /* 列表扩容 */
@@ -81,12 +116,25 @@ class MyList {
         // 1) 按 extendRatio 扩容。
         // 2) 复制原有有效元素到新数组。
         // 3) 释放旧数组并更新容量。
+        int* arr_to_delete = arr;
+        int* p = new int [extendRatio * arrCapacity];
+        for(int i = 0; i < arrSize; i++){
+            p[i] = arr[i];
+        }
+        arr = p;
+        delete[] arr_to_delete;
+        arrCapacity *= extendRatio;
     }
 
     /* 将列表转换为 Vector 用于打印 */
     vector<int> toVector() {
         // 要求：仅转换有效长度范围内的元素到 vector 并返回。
-        return {};
+        vector<int> res_vec(arrSize);
+        for(int i = 0; i<arrSize; i++){
+            res_vec[i] = arr[i];
+        }
+
+        return res_vec;
     }
 };
 
