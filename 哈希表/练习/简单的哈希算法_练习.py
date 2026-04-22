@@ -10,7 +10,10 @@ def add_hash(key: str) -> int:
     # 1) 遍历每个字符
     # 2) 用 ord(c) 累加
     # 3) 最后对 MODULUS 取模
-    raise NotImplementedError("TODO: 实现 add_hash")
+    hash: int = 0
+    for c in key:
+        hash += ord(c)
+    return hash % MODULUS
 
 
 def mul_hash(key: str) -> int:
@@ -19,7 +22,11 @@ def mul_hash(key: str) -> int:
     # 1) 使用 rolling hash 思想
     # 2) 对每个字符做 hash = 31 * hash + ord(c)
     # 3) 返回取模结果
-    raise NotImplementedError("TODO: 实现 mul_hash")
+    hash = 1
+    for c in key:
+        hash = 31 * hash + ord(c)
+    return hash % MODULUS
+
 
 
 def xor_hash(key: str) -> int:
@@ -28,7 +35,10 @@ def xor_hash(key: str) -> int:
     # 1) 初始化 hash = 0
     # 2) 遍历字符并与 ord(c) 异或
     # 3) 返回取模结果
-    raise NotImplementedError("TODO: 实现 xor_hash")
+    hash = 0
+    for c in key:
+        hash ^= ord(c)
+    return hash % MODULUS
 
 
 def rot_hash(key: str) -> int:
@@ -37,4 +47,8 @@ def rot_hash(key: str) -> int:
     # 1) 每轮先左移再右移混合
     # 2) 与当前字符编码做异或
     # 3) 最后取模
-    raise NotImplementedError("TODO: 实现 rot_hash")
+    hash = 0 # 初始值无必须要求
+    for c in key:
+        hash = (hash << 4) ^ (hash >> 28) ^ ord(c)
+    return hash % MODULUS
+    

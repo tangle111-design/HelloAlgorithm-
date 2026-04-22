@@ -5,21 +5,15 @@
 """
 
 
-def build_hash_map() -> dict[int, str]:
-    """初始化并返回哈希表。"""
-    # 步骤提示：
-    # 1) 创建空字典
-    # 2) 按给定键值对依次插入
-    # 3) 返回字典
-    raise NotImplementedError("TODO: 实现 build_hash_map")
-
-
 def query_name(hmap: dict[int, str], key: int) -> str:
     """按 key 查询 value。"""
     # 步骤提示：
     # 1) 处理 key 不存在的情况
     # 2) 返回查询结果
-    raise NotImplementedError("TODO: 实现 query_name")
+    if key not in hmap:
+        raise KeyError(f"Key {key} not found")
+    return hmap[key]
+    
 
 
 def remove_key(hmap: dict[int, str], key: int) -> None:
@@ -27,7 +21,10 @@ def remove_key(hmap: dict[int, str], key: int) -> None:
     # 步骤提示：
     # 1) 判断 key 是否存在
     # 2) 删除 key
-    raise NotImplementedError("TODO: 实现 remove_key")
+    if key in hmap:
+        del hmap[key]
+
+    
 
 
 def iterate_items(hmap: dict[int, str]) -> list[str]:
@@ -36,14 +33,28 @@ def iterate_items(hmap: dict[int, str]) -> list[str]:
     # 1) 遍历 hmap.items()
     # 2) 按 "key -> value" 格式拼接
     # 3) 收集并返回
-    raise NotImplementedError("TODO: 实现 iterate_items")
+    res: list[str] = []
+    for key, val in hmap.items():
+        # res.append(str(key)+" -> "+str(val))
+        # 正确, 但是下面更好
+        res.append(f"{key} -> {val}")
+    return res
+    
 
 
 def iterate_keys(hmap: dict[int, str]) -> list[int]:
     """遍历并返回全部 key。"""
-    raise NotImplementedError("TODO: 实现 iterate_keys")
+    # 可以直接 return list(hmap.keys())
+    res: list[int] = []
+    for key in hmap.keys():
+        res.append(key)
+    return res
 
 
 def iterate_values(hmap: dict[int, str]) -> list[str]:
     """遍历并返回全部 value。"""
-    raise NotImplementedError("TODO: 实现 iterate_values")
+    res: list[str] = []
+    for val in hmap.values():
+        res.append(val)
+    return res
+    
