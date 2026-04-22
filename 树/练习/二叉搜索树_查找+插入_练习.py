@@ -25,6 +25,13 @@ class BinarySearchTree:
         # 2) 若 num 大于当前值，走右子树。
         # 3) 若 num 小于当前值，走左子树。
         # 4) 相等时返回当前节点；遍历结束返回 None。
+        while cur is not None:
+            if num > cur.val:
+                cur = cur.right
+            elif num < cur.val:
+                cur = cur.left
+            else:
+                return cur
 
         return None
 
@@ -36,4 +43,26 @@ class BinarySearchTree:
         # 3) 遇到重复值直接结束。
         # 4) 在 pre 的左或右位置接入新节点。
 
-        """请在这里补充迭代插入逻辑。"""
+        if self._root is None:
+            self._root = TreeNode(num)
+            return
+        cur = self._root
+        pre = None
+
+        # 查找插入位置
+        while cur is not None:
+            pre = cur
+            if num > cur.val:                
+                cur = cur.right
+            elif num < cur.val:                
+                cur = cur.left
+            else:
+                return
+        
+        node = TreeNode(num)
+        if pre.val > num:
+            pre.left = node
+        else:
+            pre.right = node
+
+
