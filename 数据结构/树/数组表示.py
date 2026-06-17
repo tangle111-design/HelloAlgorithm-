@@ -2,12 +2,14 @@
 # 使用 None 来表示空位
 tree = [1, 2, 3, 4, None, 6, 7, 8, 9, None, None, 12, None, None, 15]
 
+
 class ArrayBinaryTree:
     """数组表示下的二叉树类"""
 
     def __init__(self, arr: list[int | None]):
         """构造方法"""
         self._tree = list(arr)
+        self.res: list[int] = []
 
     def size(self):
         """列表容量"""
@@ -41,57 +43,49 @@ class ArrayBinaryTree:
                 self.res.append(self.val(i))
         return self.res
 
-def dfs(self, i: int, order: str):
-  """
-基本情况处理：
-如果当前节点为空，直接返回，这是递归的终止条件
-前序遍历处理：
-当 order == "pre" 时，在递归调用左右子树之前将当前节点值加入结果列表
-符合前序遍历"根-左-右"的顺序
-中序遍历处理：
-当 order == "in" 时，在递归调用左子树之后、右子树之前将当前节点值加入结果列表
-符合中序遍历"左-根-右"的顺序
-后序遍历处理：
-当 order == "post" 时，在递归调用左右子树之后将当前节点值加入结果列表
-符合后序遍历"左-右-根"的顺序
+    def dfs(self, i: int, order: str):
+        """递归遍历
 
-这个函数的巧妙之处在于通过单个递归函数和条件判断，统一实现了三种不同的遍历方式，避免了为每种遍历方式单独写递归函数的重复代码。"""
-  
-    "基本情况：如果当前节点为空，则直接返回，结束递归"
-    if self.val(i) is None:
-        return
-    '''        1
-           / \
-          2   3
-         / \
-        4   5
-    前序遍历： → 1, 2, 4, 5, 3
-    中序遍历： → 4, 2, 5, 1, 3
-    后序遍历： → 4, 5, 2, 3, 1'''
+        这个函数的巧妙之处在于通过单个递归函数和条件判断，统一实现了三种不同的遍历方式。
 
-    "前序遍历：在递归访问左右子树之前访问当前节点
-    "访问顺序：根节点 -> 左子树 -> 右子树
-    if order == "pre":
-        self.res.append(self.val(i))
-    "递归遍历左子树
-    self.dfs(self.left(i), order)
-    
-    "中序遍历：在递归访问左子树之后，右子树之前访问当前节点
-    "访问顺序：左子树 -> 根节点 -> 右子树
-    if order == "in":
-        self.res.append(self.val(i))    
-    "递归遍历右子树
-    self.dfs(self.right(i), order)
-    
-    "后序遍历：在递归访问左右子树之后访问当前节点
-    "访问顺序：左子树 -> 右子树 -> 根节点
-    if order == "post":
-        self.res.append(self.val(i))
+        前序遍历：根节点 -> 左子树 -> 右子树
+        中序遍历：左子树 -> 根节点 -> 右子树
+        后序遍历：左子树 -> 右子树 -> 根节点
 
-        
+                    1
+                   / \
+                  2   3
+                 / \
+                4   5
+        前序遍历： 1, 2, 4, 5, 3
+        中序遍历： 4, 2, 5, 1, 3
+        后序遍历： 4, 5, 2, 3, 1
+        """
+        # 基本情况：如果当前节点为空，则直接返回，结束递归
+        if self.val(i) is None:
+            return
+
+        # 前序遍历：在递归访问左右子树之前访问当前节点
+        if order == "pre":
+            self.res.append(self.val(i))
+
+        # 递归遍历左子树
+        self.dfs(self.left(i), order)
+
+        # 中序遍历：在递归访问左子树之后、右子树之前访问当前节点
+        if order == "in":
+            self.res.append(self.val(i))
+
+        # 递归遍历右子树
+        self.dfs(self.right(i), order)
+
+        # 后序遍历：在递归访问左右子树之后访问当前节点
+        if order == "post":
+            self.res.append(self.val(i))
+
     def pre_order(self) -> list[int]:
         """前序遍历"""
-        self.res = [] """每次调用都重置res"""
+        self.res = []
         self.dfs(0, order="pre")
         return self.res
 

@@ -1,12 +1,38 @@
-def merge(nums: list[int], left: int, mid: int, right: int):
-    """合并两个有序区间 [left, mid] 和 [mid + 1, right]"""
+"""归并排序练习版 - 分治思想的经典应用。
+
+核心思想：
+1. 将数组从中间分成两半
+2. 分别对两半进行归并排序（递归）
+3. 将两个有序的子数组合并成一个有序数组
+
+特点：
+- 稳定排序
+- 时间复杂度稳定为 O(n log n)
+- 需要额外空间 O(n)
+
+时间复杂度：O(n log n)
+空间复杂度：O(n)
+稳定性：稳定排序
+"""
+
+
+def merge(nums: list[int], left: int, mid: int, right: int) -> None:
+    """合并两个有序子数组 [left, mid] 和 [mid+1, right]。
+
+    算法步骤：
+    1. 创建临时数组 tmp 存放合并结果
+    2. 用三个指针分别遍历左子数组、右子数组、临时数组
+    3. 比较左右子数组的当前元素，较小的放入 tmp
+    4. 将剩余元素复制到 tmp
+    5. 将 tmp 的内容复制回原数组
+    """
     tmp = [0] * (right - left + 1)
 
-    i = left
-    j = mid + 1
-    k = 0
+    # 步骤 1：初始化指针
+    # TODO: i=left (左子数组), j=mid+1 (右子数组), k=0 (临时数组)
+    i, j, k = left, mid + 1, 0
 
-    # TODO 1: 双指针比较，把更小值写入 tmp
+    # 步骤 2：比较并合并
     while i <= mid and j <= right:
         if nums[i] <= nums[j]:
             tmp[k] = nums[i]
@@ -16,33 +42,49 @@ def merge(nums: list[int], left: int, mid: int, right: int):
             j += 1
         k += 1
 
-    # TODO 2: 处理左半区剩余元素
+    # 步骤 3：复制剩余元素
     while i <= mid:
         tmp[k] = nums[i]
         i += 1
         k += 1
-
-    # TODO 3: 处理右半区剩余元素
     while j <= right:
         tmp[k] = nums[j]
         j += 1
         k += 1
 
-    # TODO 4: 回写到原数组对应区间
-    for p in range(len(tmp)):
-        nums[left + p] = tmp[p]
+    # 步骤 4：将结果复制回原数组
+    for k in range(len(tmp)):
+        nums[left + k] = tmp[k]
 
 
-def merge_sort(nums: list[int], left: int, right: int):
-    """归并排序练习版（原地覆盖）"""
-    # TODO 1: 递归终止条件
+def merge_sort(nums: list[int], left: int, right: int) -> None:
+    """归并排序主函数。"""
     if left >= right:
         return
 
-    # TODO 2: 计算中点并递归处理左右区间
     mid = (left + right) // 2
     merge_sort(nums, left, mid)
     merge_sort(nums, mid + 1, right)
-
-    # TODO 3: 合并两个有序子区间
     merge(nums, left, mid, right)
+
+
+if __name__ == "__main__":
+    test_cases = [
+        [4, 1, 3, 1, 5, 2],
+        [1, 2, 3, 4, 5],
+        [5, 4, 3, 2, 1],
+    ]
+
+    print("=" * 60)
+    print("归并排序测试")
+    print("=" * 60)
+
+    for arr in test_cases:
+        original = arr.copy()
+        merge_sort(arr, 0, len(arr) - 1)
+        print(f"✅ {original} → {arr}")
+
+    print("\n💡 关键要点：")
+    print("- 分而治之：先拆分再合并")
+    print("- 稳定排序，适合链表等数据结构")
+    print("- 需要额外空间，但性能稳定")

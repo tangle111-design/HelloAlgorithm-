@@ -1,25 +1,52 @@
-def partition(self, nums: list[int], left: int, right: int) -> int:
-    """哨兵划分"""
-    # 以 nums[left] 为基准数
+"""快速排序（Quick Sort）- 基于分治的高效排序算法。
+
+核心思想：
+1. 选择一个"基准数"（pivot）
+2. 将数组分为两部分：小于基准的、大于基准的
+3. 递归对两部分分别进行快排
+
+时间复杂度：平均 O(n log n)，最坏 O(n²)
+空间复杂度：O(log n)（递归栈）
+稳定性：不稳定排序
+"""
+
+
+def partition(nums: list[int], left: int, right: int) -> int:
+    """哨兵划分 - 将数组分为两部分。"""
     i, j = left, right
+
     while i < j:
         while i < j and nums[j] >= nums[left]:
-            j -= 1  # 从右向左找首个小于基准数的元素
+            j -= 1
         while i < j and nums[i] <= nums[left]:
-            i += 1  # 从左向右找首个大于基准数的元素
-        # 元素交换
+            i += 1
         nums[i], nums[j] = nums[j], nums[i]
-    # 将基准数交换至两子数组的分界线
-    nums[i], nums[left] = nums[left], nums[i]
-    return i  # 返回基准数的索引
 
-def quick_sort(self, nums: list[int], left: int, right: int):
-    """快速排序"""
-    # 子数组长度为 1 时终止递归
+    nums[i], nums[left] = nums[left], nums[i]
+    return i
+
+
+def quick_sort(nums: list[int], left: int, right: int) -> None:
+    """快速排序主函数。"""
     if left >= right:
         return
-    # 哨兵划分
-    pivot = self.partition(nums, left, right)
-    # 递归左子数组、右子数组
-    self.quick_sort(nums, left, pivot - 1)
-    self.quick_sort(nums, pivot + 1, right)
+
+    pivot = partition(nums, left, right)
+    quick_sort(nums, left, pivot - 1)
+    quick_sort(nums, pivot + 1, right)
+
+
+if __name__ == "__main__":
+    test_cases = [
+        [4, 1, 3, 1, 5, 2],
+        [1, 2, 3, 4, 5],
+        [5, 4, 3, 2, 1],
+    ]
+
+    print("快速排序测试")
+    print("=" * 50)
+
+    for arr in test_cases:
+        original = arr.copy()
+        quick_sort(arr, 0, len(arr) - 1)
+        print(f"✅ {original} → {arr}")

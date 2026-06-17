@@ -1,68 +1,89 @@
-def partition_hoare(arr: list[int], low: int, high: int) -> int:
-    """Hoare 分区方案练习壳"""
-    # 核心理解：
-    # 1) 选一个基准值（这里用中间值）
-    # 2) 左指针找 >= pivot 的元素，右指针找 <= pivot 的元素
-    # 3) 若未交错就交换，直到 i >= j
-    pivot = arr[(low + high) // 2]
-    i = low - 1
-    j = high + 1
+"""快速排序变体练习版 - 不同分区方案和优化策略。
 
-    while True:
-        # TODO 1: i 右移到第一个 >= pivot 的位置
-        i += 1
-        while arr[i] < pivot:
-            i += 1
+本文件包含三种快速排序的变体实现：
 
-        # TODO 2: j 左移到第一个 <= pivot 的位置
-        j -= 1
-        while arr[j] > pivot:
-            j -= 1
+1. Hoare 分区方案（原始版本）
+   - 使用中间元素作为基准
+   - 指针从两端向中间移动
+   - 返回的分区点可能不同
 
-        # TODO 3: 指针交错时返回分界点
-        if i >= j:
-            return j
+2. 非递归实现（使用栈模拟）
+   - 用栈存储待排序区间
+   - 避免递归导致的栈溢出风险
+   - 适合深度较大的情况
 
-        # TODO 4: 交换错位元素
-        arr[i], arr[j] = arr[j], arr[i]
+3. 三路分区（处理重复元素）
+   - 将数组分为三部分：< pivot, = pivot, > pivot
+   - 大量重复元素时效率更高
+   - 减少不必要的递归调用
+
+每种方案针对不同场景进行优化。
+"""
 
 
 def quicksort_hoare(arr: list[int]) -> list[int]:
-    """递归版快速排序（Hoare 分区）"""
-
-    def _quicksort(low: int, high: int):
-        # 注意：Hoare 分区返回 j 后，递归区间是 [low, j] 和 [j + 1, high]
+    """Hoare分区方案的快速排序。"""
+    def _quicksort(low: int, high: int) -> None:
         if low < high:
             pivot_index = partition_hoare(arr, low, high)
             _quicksort(low, pivot_index)
             _quicksort(pivot_index + 1, high)
 
-    if arr:
-        _quicksort(0, len(arr) - 1)
+    _quicksort(0, len(arr) - 1)
     return arr
 
 
-def quick_sort_iterative(arr: list[int]):
-    """非递归快速排序练习壳（栈模拟）"""
-    if not arr:
+def partition_hoare(arr: list[int], low: int, high: int) -> int:
+    """Hoare分区方案。
+
+    特点：
+    - 选择中间元素作为基准
+    - 指针 i 从左找 >= pivot，j 从右找 <= pivot
+    - 交换后继续，直到指针相遇
+    """
+    pivot = arr[(low + high) // 2]
+    i, j = low - 1, high + 1
+
+    while True:
+        i += 1
+        while arr[i] < pivot:
+            i += 1
+
+        j -= 1
+        while arr[j] > pivot:
+            j -= 1
+
+        if i >= j:
+            return j
+
+        arr[i], arr[j] = arr[j], arr[i]
+
+
+def quick_sort_iterative(arr: list[int]) -> None:
+    """非递归快速排序（使用栈模拟）。
+
+    核心思路：
+    - 使用列表模拟系统栈
+    - 存储待处理的 [start, end] 区间
+    - 循环处理直到栈为空
+    """
+    if len(arr) <= 0:
         return
 
-    ranges: list[tuple[int, int]] = [(0, len(arr) - 1)]
+    ranges = [(0, len(arr) - 1)]
 
     while ranges:
         start, end = ranges.pop()
         if start >= end:
             continue
 
-        # 可练习点：把这里替换成你熟悉的任意分区方案
-        pivot = arr[(start + end) // 2]
+        mid = arr[(start + end) // 2]
         left, right = start, end
 
-        # TODO 1: 在 [start, end] 上完成一次 Hoare 风格分区
         while True:
-            while arr[left] < pivot:
+            while arr[left] < mid:
                 left += 1
-            while arr[right] > pivot:
+            while arr[right] > mid:
                 right -= 1
 
             if left <= right:
@@ -72,23 +93,27 @@ def quick_sort_iterative(arr: list[int]):
             else:
                 break
 
-        # TODO 2: 把左右子区间入栈，继续处理
         if start < right:
             ranges.append((start, right))
-        if left < end:
+        if end > left:
             ranges.append((left, end))
 
 
-def quicksort_3way(arr: list[int], low: int, high: int):
-    """三路快排练习壳（适合大量重复值）"""
+def quicksort_3way(arr: list[int], low: int, high: int) -> None:
+    """三路分区快速排序。
+
+    适用场景：数组中有大量重复元素
+
+    将数组分为三个区域：
+    - [low, lt-1]: < pivot
+    - [lt, gt]: == pivot
+    - [gt+1, high]: > pivot
+
+    只需对 < 和 > 区域递归，= 的区域已经有序！
+    """
     if low >= high:
         return
 
-    # 三路分区含义：
-    # [low, lt-1] < pivot
-    # [lt, i-1]  == pivot
-    # [i, gt]    未处理
-    # [gt+1, high] > pivot
     lt, i, gt = low, low, high
     pivot = arr[low]
 
@@ -105,3 +130,28 @@ def quicksort_3way(arr: list[int], low: int, high: int):
 
     quicksort_3way(arr, low, lt - 1)
     quicksort_3way(arr, gt + 1, high)
+
+
+if __name__ == "__main__":
+    test_arr = [4, 1, 3, 1, 5, 2, 3, 3]
+
+    print("=" * 60)
+    print("快速排序变体测试")
+    print("=" * 60)
+
+    original = test_arr.copy()
+    result = quicksort_hoare(test_arr.copy())
+    print(f"✅ Hoare分区: {original} → {result}")
+
+    test_arr2 = original.copy()
+    quick_sort_iterative(test_arr2)
+    print(f"✅ 非递归版: {original} → {test_arr2}")
+
+    test_arr3 = original.copy()
+    quicksort_3way(test_arr3, 0, len(test_arr3) - 1)
+    print(f"✅ 三路分区: {original} → {test_arr3}")
+
+    print("\n💡 关键要点：")
+    print("- Hoare: 原始版本，代码简洁")
+    print("- 非递归: 避免栈溢出，适合大数据量")
+    print("- 三路分区: 优化重复元素多的场景")

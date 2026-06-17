@@ -1,49 +1,61 @@
-#include <vector>
-
-using namespace std;
-
-/*
- * 辅助函数：返回 target 的最左插入点
- * 说明：边界查找依赖该函数，请先完成它
+/**
+ * 二分查找边界练习版（C++）
+ *
+ * 功能：在有重复元素的有序数组中查找边界
+ *
+ * 最左边界：第一个出现 target 的位置
+ * 最右边界：最后一个出现 target 的位置
+ *
+ * 实现技巧：
+ * 利用"查找插入点"函数来实现边界查找
+ * - 最左边界 = target 的插入点
+ * - 最右边界 = (target+1) 的插入点 - 1
  */
-int binarySearchInsertion(vector<int> &nums, int target) {
-    int left = 0;
-    int right = static_cast<int>(nums.size()) - 1;
 
-    while (left <= right) {
-        int mid = left + (right - left) / 2;
+/* 查找最左侧的 target */
+int binarySearchLeftEdge(vector<int> &nums, int target) {
+    // 步骤 1：调用插入点函数获取位置
+    // TODO: i = binarySearchInsertion(nums, target)
+    int i = binarySearchInsertion(nums, target);
 
-        // 提示：
-        // 1) nums[mid] < target：left = mid + 1
-        // 2) nums[mid] >= target：right = mid - 1
+    // 步骤 2：边界检查
+    // TODO: 检查两种情况：
+    //       1. i == nums.size()（target 比所有元素都大）
+    //       2. nums[i] != target（该位置不是 target）
+    //       如果满足任一条件，return -1
+    if (i == nums.size() || nums[i] != target) {
+        return -1; // 未找到
     }
 
-    return left;
+    // 步骤 3：返回最左侧索引
+    // TODO: return i
+    return i;
 }
 
-/* 二分查找最左一个 target */
-int binarySearchLeftEdge(vector<int> &nums, int target) {
-    // 步骤 1：先求 target 的最左插入点
-    int index = binarySearchInsertion(nums, target);
-
-    // 步骤 2：校验 index 是否越界，或是否真的指向 target
-    // 若不满足条件返回 -1
-
-    // 步骤 3：满足条件则返回 index
-    return index;
-}
-
-/* 二分查找最右一个 target */
+/* 查找最右侧的 target */
 int binarySearchRightEdge(vector<int> &nums, int target) {
-    // 步骤 1：将问题转化为查找 target + 1 的最左插入点
-    int index = binarySearchInsertion(nums, target + 1);
+    // 步骤 1：查找 "target+1" 的插入点
+    // 这样得到的是首个 > target 的位置
+    // TODO: i = binarySearchInsertion(nums, target + 1)
+    int i = binarySearchInsertion(nums, target + 1);
 
-    // 步骤 2：最右 target 的位置应为 index - 1
-    int rightEdge = index - 1;
+    // 步骤 2：计算最右侧位置
+    // 最右侧的 target 就在 i 的前一个位置
+    // TODO: j = i - 1
+    int j = i - 1;
 
-    // 步骤 3：校验 rightEdge 是否有效且 nums[rightEdge] == target
-    // 若不满足条件返回 -1
+    // 步骤 3：边界检查
+    // TODO: 若 j == -1 或 nums[j] != target，return -1
+    if (j == -1 || nums[j] != target) {
+        return -1;
+    }
 
-    // 步骤 4：返回 rightEdge
-    return rightEdge;
+    // 步骤 4：返回结果
+    // TODO: return j
+    return j;
 }
+
+/**
+ * 💡 应用示例：统计 target 出现次数
+ * count = binarySearchRightEdge(...) - binarySearchLeftEdge(...) + 1
+ */

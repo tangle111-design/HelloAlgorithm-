@@ -1,43 +1,73 @@
-def counting_sort_naive(nums: list[int]):
-    """计数排序"""
-    # 简单实现，无法用于排序对象
-    # 1. 统计数组最大元素 m
+"""计数排序（Counting Sort）- 非比较型排序算法。
+
+核心思想：
+统计每个元素出现的次数，
+然后根据统计结果将元素放回正确的位置。
+
+特点：
+- 线性时间复杂度 O(n+k)
+- 只能用于整数排序（或可映射为整数）
+- 需要知道数据的范围
+
+时间复杂度：O(n + k)（k 为数据范围）
+空间复杂度：O(k)
+稳定性：可以实现稳定排序
+"""
+
+
+def counting_sort_naive(nums: list[int]) -> None:
+    """简单版计数排序（无法保持稳定性）。"""
     m = max(nums)
-    # 2. 统计各数字的出现次数
-    # counter[num] 代表 num 的出现次数
     counter = [0] * (m + 1)
+
     for num in nums:
         counter[num] += 1
-    # 3. 遍历 counter ，将各元素填入原数组 nums
+
     i = 0
     for num in range(m + 1):
         for _ in range(counter[num]):
             nums[i] = num
             i += 1
 
-def counting_sort(nums: list[int]):
-    """计数排序"""
-    # 完整实现，可排序对象，并且是稳定排序
-    # 1. 统计数组最大元素 m
+
+def counting_sort(nums: list[int]) -> None:
+    """完整版计数排序（稳定排序）。
+
+    关键技巧：
+    使用前缀和来确定每个元素的最终位置，
+    并倒序遍历以保持相同元素的相对顺序。
+    """
     m = max(nums)
-    # 2. 统计各数字的出现次数
-    # counter[num] 代表 num 的出现次数
     counter = [0] * (m + 1)
+
     for num in nums:
         counter[num] += 1
-    # 3. 求 counter 的前缀和，将“出现次数”转换为“尾索引”
-    # 即 counter[num]-1 是 num 在 res 中最后一次出现的索引
-    # 此处实际是把counter[]变为prefix[]
+
     for i in range(m):
         counter[i + 1] += counter[i]
-    # 4. 倒序遍历 nums ，将各元素填入结果数组 res
-    # 初始化数组 res 用于记录结果
+
     n = len(nums)
     res = [0] * n
+
     for i in range(n - 1, -1, -1):
         num = nums[i]
-        res[counter[num] - 1] = num  # 将 num 放置到对应索引处
-        counter[num] -= 1  # 令前缀和自减 1 ，得到下次放置 num 的索引
-    # 使用结果数组 res 覆盖原数组 nums
+        res[counter[num] - 1] = num
+        counter[num] -= 1
+
     for i in range(n):
         nums[i] = res[i]
+
+
+if __name__ == "__main__":
+    test_cases = [
+        [1, 0, 1, 2, 0, 3, 2, 1],
+        [5, 4, 3, 2, 1],
+    ]
+
+    print("计数排序测试")
+    print("=" * 50)
+
+    for arr in test_cases:
+        original = arr.copy()
+        counting_sort(arr)
+        print(f"✅ {original} → {arr}")

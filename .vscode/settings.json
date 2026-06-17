@@ -5,5 +5,9 @@
         "markdown": false,
         "scminput": false
     },
-    "C_Cpp.errorSquiggles": "disabled"
+    "C_Cpp.errorSquiggles": "disabled",
+    "trae.enableCodelens": {
+        "enableInlineDocumentation": false,
+        "enableInlineExplain": false
+    }
 }

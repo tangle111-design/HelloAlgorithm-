@@ -1,11 +1,26 @@
-def merge(nums: list[int], left: int, mid: int, right: int):
-    """合并左子数组和右子数组"""
-    # 左子数组区间为 [left, mid], 右子数组区间为 [mid+1, right]
-    # 创建一个临时数组 tmp ，用于存放合并后的结果
+"""归并排序（Merge Sort）- 分治思想的经典应用。
+
+核心思想：
+1. 将数组从中间分成两半
+2. 分别对两半进行归并排序
+3. 将两个有序的子数组合并成一个有序数组
+
+特点：
+- 稳定排序
+- 时间复杂度稳定为 O(n log n)
+- 需要额外空间 O(n)
+
+时间复杂度：O(n log n)
+空间复杂度：O(n)
+稳定性：稳定排序
+"""
+
+
+def merge(nums: list[int], left: int, mid: int, right: int) -> None:
+    """合并两个有序子数组 [left, mid] 和 [mid+1, right]。"""
     tmp = [0] * (right - left + 1)
-    # 初始化左子数组和右子数组的起始索引
     i, j, k = left, mid + 1, 0
-    # 当左右子数组都还有元素时，进行比较并将较小的元素复制到临时数组中
+
     while i <= mid and j <= right:
         if nums[i] <= nums[j]:
             tmp[k] = nums[i]
@@ -14,7 +29,7 @@ def merge(nums: list[int], left: int, mid: int, right: int):
             tmp[k] = nums[j]
             j += 1
         k += 1
-    # 将左子数组和右子数组的剩余元素复制到临时数组中
+
     while i <= mid:
         tmp[k] = nums[i]
         i += 1
@@ -23,18 +38,33 @@ def merge(nums: list[int], left: int, mid: int, right: int):
         tmp[k] = nums[j]
         j += 1
         k += 1
-    # 将临时数组 tmp 中的元素复制回原数组 nums 的对应区间
-    for k in range(0, len(tmp)):
+
+    for k in range(len(tmp)):
         nums[left + k] = tmp[k]
 
-def merge_sort(nums: list[int], left: int, right: int):
-    """归并排序"""
-    # 终止条件
+
+def merge_sort(nums: list[int], left: int, right: int) -> None:
+    """归并排序主函数。"""
     if left >= right:
-        return  # 当子数组长度为 1 时终止递归
-    # 划分阶段
-    mid = (left + right) // 2 # 计算中点
-    merge_sort(nums, left, mid)  # 递归左子数组
-    merge_sort(nums, mid + 1, right)  # 递归右子数组
-    # 合并阶段
+        return
+
+    mid = (left + right) // 2
+    merge_sort(nums, left, mid)
+    merge_sort(nums, mid + 1, right)
     merge(nums, left, mid, right)
+
+
+if __name__ == "__main__":
+    test_cases = [
+        [4, 1, 3, 1, 5, 2],
+        [1, 2, 3, 4, 5],
+        [5, 4, 3, 2, 1],
+    ]
+
+    print("归并排序测试")
+    print("=" * 50)
+
+    for arr in test_cases:
+        original = arr.copy()
+        merge_sort(arr, 0, len(arr) - 1)
+        print(f"✅ {original} → {arr}")
